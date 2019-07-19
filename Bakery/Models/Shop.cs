@@ -28,19 +28,34 @@ namespace Bakery
         }
         public void PurchaseSequence()
         {
-            if (AskYesNo("Would you like to view the menu? y/n"))
+            if (AskYesNo("Would you like to order? y/n"))
             {
                 WriteLine("The Bakery Menu!");
                 DrawLine();
                 ShowMenu();
                 GetUserOrder();
             }
+            else
+            {
             if(AskYesNo("Ready to checkout? (y/n)"))
             {
-                ShowOrder();
+                ShowOrder(true);
                 // checkout
             }
-            PurchaseSequence();
+            else
+            {
+                if(!AskYesNo("quit?"))
+                {
+                    PurchaseSequence();
+                }
+                else
+                {
+                    WriteLine("Bye");
+                }
+            }
+            }
+
+            
         }
         public void GetUserOrder()
         {
@@ -69,7 +84,7 @@ namespace Bakery
                     Pastry newItem = new Pastry(itemName, price, quantity);
                     pastryOrdered.Add(itemName, newItem);
                 }
-                ShowOrder();
+                ShowOrder(false);
                 PurchaseSequence();
             }
             else
@@ -79,19 +94,28 @@ namespace Bakery
             }
 
         }
-        public void ShowOrder()
+        public void ShowOrder(bool fishished)
         {
             WriteLine("------- Your order --------");
             DrawLine();
+            _total = 0;
             foreach (KeyValuePair<string, Pastry> p in pastryOrdered)
             {
                 _total += p.Value.Quantity * p.Value.Price;
                 WriteLine($"Item: {p.Key} ..... Quatity: {p.Value.Quantity}");
+
             }
+            WriteLine($"test running total {_total}");
             DrawLine();
-            WriteLine($"Total = ${_total}");
-            DrawLine();
+            if(!fishished)
+            {
+                DrawLine();
             PurchaseSequence();
+            }
+            else
+            {
+                WriteLine($"Total = ${_total}");
+            }
         }
         public void ShowMenu()
         {
