@@ -1,0 +1,6 @@
+using Sytem;
+
+class Program
+{
+
+}
