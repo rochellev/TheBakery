@@ -6,7 +6,7 @@ public class Program
     {
         Store store = new Store();
         // greet user, show menu
-        store.Welcome();
+        store.StartStore();
     }
 
 }
