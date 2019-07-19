@@ -6,12 +6,12 @@ namespace Bakery
 {
     class Store
     {
-        protected List<Pastry> pastryOrdered;
+        protected Dictionary<string, Pastry> pastryOrdered;
         protected Dictionary<string, int> menuItems;
         // default constructor
         public Store()
         {
-            pastryOrdered = new List<Pastry>();
+            pastryOrdered = new Dictionary<string, Pastry>();
             menuItems = new Dictionary<string, int>()
             {
                 {"Eclair", 2},
@@ -23,11 +23,12 @@ namespace Bakery
         {
             WriteLine("~~~ Welcome to The Bakery ~~~");
             PurchaseSequence();
-            
-          
+
+
         }
-        public void PurchaseSequence(){
-            if(AskYesNo("Would you like to view the menu? y/n"))
+        public void PurchaseSequence()
+        {
+            if (AskYesNo("Would you like to view the menu? y/n"))
             {
                 WriteLine("The Bakery Menu!");
                 DrawLine();
@@ -42,14 +43,26 @@ namespace Bakery
             MakePurchase(item, num);
 
         }
-        public void MakePurchase(string itemName, int quantity){
-            // check to see valid
+        public void MakePurchase(string itemName, int quantity)
+        {
             int price;
-            if(menuItems.TryGetValue(itemName, out price))
+            // see if a menu item
+            if (menuItems.TryGetValue(itemName, out price))
             {
-                Pastry order = new Pastry(itemName, price, quantity);
-                pastryOrdered.Add(order);
+                Pastry order;
+                // check if already ordered
+                if (pastryOrdered.TryGetValue(itemName, out order))
+                {
+                    order.Quantity += quantity;
+                }
+                else
+                {
+                    Pastry newItem = new Pastry(itemName, price, quantity);
+                    pastryOrdered.Add(itemName, newItem);
+                }
                 ShowOrder();
+                PurchaseSequence();
+
 
             }
             else
@@ -62,9 +75,9 @@ namespace Bakery
         public void ShowOrder()
         {
             DrawLine();
-            foreach(Pastry p in pastryOrdered)
+            foreach (KeyValuePair<string, Pastry> p in pastryOrdered)
             {
-                WriteLine($"Item: {p.PastryName} ..... Quatity: {p.Quantity}");
+                WriteLine($"Item: {p.Key} ..... Quatity: {p.Value.Quantity}");
             }
             DrawLine();
             PurchaseSequence();
@@ -72,7 +85,7 @@ namespace Bakery
         public void ShowMenu()
         {
             DrawLine();
-            foreach(KeyValuePair<string, int> kvp in menuItems)
+            foreach (KeyValuePair<string, int> kvp in menuItems)
             {
                 WriteLine($"{kvp.Key} ........ ${kvp.Value}");
             }
@@ -82,7 +95,7 @@ namespace Bakery
         // helper functions for UI
         public void DrawLine()
         {
-           WriteLine("---------------------------");
+            WriteLine("---------------------------");
         }
         public bool CheckYes(string str)
         {
