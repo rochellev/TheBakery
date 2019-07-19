@@ -1,10 +1,9 @@
-# Project
+# The Bakery
 ### By Rochelle Roberts
 -----
 
 ## Description
-* Project template for C# console apps
-* Unit testing set up too
+* The Bakery is a C# Console App simulating the fun of buying baked goods
 
 ## Technologies Used
 * C#
@@ -15,8 +14,10 @@
 * From the project's root directory, open console and type dotnet run
 
 ```sh
-$ git clone 
-$ cd  
+$ git clone https://github.com/rochellev/TheBakery.git
+$ cd TheBakery
+$ cd Bakery
+$ dotnet restore
 $ dotnet run
 ```
 
