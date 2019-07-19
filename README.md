@@ -1,5 +1,5 @@
 # The Bakery
-### By Rochelle Roberts
+### By Rochelle Roberts, Software Engineer
 -----
 
 ## Description
@@ -7,6 +7,7 @@
 
 ## Technologies Used
 * C#
+* .NET
 * MSTest
 
 ## Installation
@@ -25,6 +26,14 @@ $ dotnet run
 
 | Behaviors       | Input          | Output      |
 | ---------------- |:------------:| :--------------:|
+| Start program | dotnet run | welcome message |
+| See prices |  User responds "yes" to see menu | Program prints out available items and prices |
+| User can purchase items | User type menu item and quantity | 
+Cost for those items added to total |
+| User can complete order | user types "checkout" | Total printed |
+| Buy 2 Bread get 1 Bread free | user buys 2 Breads | 1 bread added for free |
+| Buy 3 Pastries at discount | user buys 3 Pastries | Discount applied |
+
 
 
 ## Project Directory
