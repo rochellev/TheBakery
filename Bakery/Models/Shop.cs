@@ -8,6 +8,7 @@ namespace Bakery
     {
         protected Dictionary<string, Pastry> pastryOrdered;
         protected Dictionary<string, int> menuItems;
+        private int _total = 0;
         // default constructor
         public Store()
         {
@@ -24,7 +25,6 @@ namespace Bakery
             WriteLine("~~~ Welcome to The Bakery ~~~");
             PurchaseSequence();
 
-
         }
         public void PurchaseSequence()
         {
@@ -33,7 +33,17 @@ namespace Bakery
                 WriteLine("The Bakery Menu!");
                 DrawLine();
                 ShowMenu();
+                GetUserOrder();
             }
+            if(AskYesNo("Ready to checkout? (y/n)"))
+            {
+                ShowOrder();
+                // checkout
+            }
+            PurchaseSequence();
+        }
+        public void GetUserOrder()
+        {
             WriteLine("Type the name of item you would like");
             string item = ReadLine();
             DrawLine();
@@ -41,7 +51,6 @@ namespace Bakery
             int num = int.Parse(ReadLine());
             DrawLine();
             MakePurchase(item, num);
-
         }
         public void MakePurchase(string itemName, int quantity)
         {
@@ -62,23 +71,25 @@ namespace Bakery
                 }
                 ShowOrder();
                 PurchaseSequence();
-
-
             }
             else
             {
-                WriteLine("Sorry, could not find that item in the menu.");
+                WriteLine($"Sorry, could not find {itemName} on the menu.");
                 PurchaseSequence();
             }
 
         }
         public void ShowOrder()
         {
+            WriteLine("------- Your order --------");
             DrawLine();
             foreach (KeyValuePair<string, Pastry> p in pastryOrdered)
             {
+                _total += p.Value.Quantity * p.Value.Price;
                 WriteLine($"Item: {p.Key} ..... Quatity: {p.Value.Quantity}");
             }
+            DrawLine();
+            WriteLine($"Total = ${_total}");
             DrawLine();
             PurchaseSequence();
         }
