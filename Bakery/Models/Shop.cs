@@ -8,16 +8,22 @@ namespace Bakery
     {
         protected Dictionary<string, Pastry> pastryOrdered;
         protected Dictionary<string, int> menuItems;
-        private int _total = 0;
-        // default constructor
+        protected Dictionary<string, Bread> breadOrdered;
+        private int _total;
+        // default constructor, init dictionaries
         public Store()
         {
             pastryOrdered = new Dictionary<string, Pastry>();
+            breadOrdered = new Dictionary<string, Bread>();
+            _total = 0;
             menuItems = new Dictionary<string, int>()
             {
                 {"Eclair", 2},
                 {"Bear Claw", 3},
-                {"Croissant", 5}
+                {"Croissant", 5},
+                {"Sourdough", 5},
+                {"Baguette", 5},
+                {"Rye Bread", 5}
             };
         }
         public void StartStore()
@@ -37,25 +43,22 @@ namespace Bakery
             }
             else
             {
-            if(AskYesNo("Ready to checkout? (y/n)"))
-            {
-                ShowOrder(true);
-                // checkout
-            }
-            else
-            {
-                if(!AskYesNo("quit?"))
+                if (AskYesNo("Ready to checkout? (y/n)"))
                 {
-                    PurchaseSequence();
+                    ShowOrder(true);
+                    Bye();
+                    // checkout
                 }
                 else
                 {
-                    WriteLine("Bye");
+                    if (!AskYesNo("quit?"))
+                    {
+                        PurchaseSequence();
+                    }
                 }
             }
-            }
 
-            
+
         }
         public void GetUserOrder()
         {
@@ -105,12 +108,11 @@ namespace Bakery
                 WriteLine($"Item: {p.Key} ..... Quatity: {p.Value.Quantity}");
 
             }
-            WriteLine($"test running total {_total}");
             DrawLine();
-            if(!fishished)
+            if (!fishished)
             {
                 DrawLine();
-            PurchaseSequence();
+                PurchaseSequence();
             }
             else
             {
@@ -125,6 +127,10 @@ namespace Bakery
                 WriteLine($"{kvp.Key} ........ ${kvp.Value}");
             }
             DrawLine();
+        }
+        public void Bye()
+        {
+            WriteLine("Bye!");
         }
 
         // helper functions for UI
