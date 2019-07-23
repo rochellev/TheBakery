@@ -4,10 +4,8 @@ using System.Collections.Generic;
 
 namespace Bakery
 {
-    class Store
+    public class Store
     {
-        protected Dictionary<string, Pastry> pastryOrdered;
-        protected Dictionary<string, Bread> breadOrdered;
         protected Dictionary<string, int> pastryItems;
         protected Dictionary<string, int> breadItems;
         private int _total;
@@ -15,8 +13,6 @@ namespace Bakery
         // default constructor, init dictionaries
         public Store()
         {
-            pastryOrdered = new Dictionary<string, Pastry>();
-            breadOrdered = new Dictionary<string, Bread>();
             _total = 0;
             pastryItems = new Dictionary<string, int>()
             {
@@ -33,121 +29,60 @@ namespace Bakery
         }
         public void StartStore()
         {
-            WriteLine("~~~ Welcome to The Bakery ~~~");
-            PurchaseSequence();
-
+            if (AskYesNo("Would you like to order? (y/n)"))
+            {
+                ShowMenu();
+                PurchaseSequence();
+                StartStore();
+            }
+            if (AskYesNo("Would you like to checkout? (y/n)"))
+            {
+                ShowOrder();
+            }
+            if (!AskYesNo("Would you like to quit? (y/n)"))
+            {
+                StartStore();
+            }
         }
         public void PurchaseSequence()
         {
-            if (AskYesNo("Would you like to order? y/n"))
-            {
-                WriteLine("The Bakery Menu!");
-                DrawLine();
-                ShowMenu();
-                GetUserOrder();
-            }
-            else
-            {
-                if (AskYesNo("Ready to checkout? (y/n)"))
-                {
-                    ShowOrder(true);
-                    Bye();
-                    // checkout
-                }
-                else
-                {
-                    if (!AskYesNo("quit?"))
-                    {
-                        PurchaseSequence();
-                    }
-                }
-            }
-
-
-        }
-        public void GetUserOrder()
-        {
-            WriteLine("Type the name of item you would like");
+            DrawLine();
+            WriteLine("Type the name of item you would like: ");
             string item = ReadLine();
             DrawLine();
-            WriteLine($"Type the number of {item}s would you like");
+            WriteLine($"Type the number of {item}s would you like: ");
             int num = int.Parse(ReadLine());
             DrawLine();
 
-            MakePurchase(item, num);
         }
         public void MakePurchase(string itemName, int quantity)
         {
             int price;
-            // see if a menu item
             if (pastryItems.TryGetValue(itemName, out price))
             {
-                Pastry order;
-                // check if already ordered
-                if (pastryOrdered.TryGetValue(itemName, out order))
-                {
-                    order.Quantity += quantity;
-                }
-                else
-                {
-                    Pastry newItem = new Pastry(itemName, price, quantity);
-                    pastryOrdered.Add(itemName, newItem);
-                }
-                ShowOrder(false);
-                PurchaseSequence();
+                BakeryItem pastry = new BakeryItem(itemName, price, quantity);
             }
-            if (breadItems.TryGetValue(itemName, out price))
+            else if (breadItems.TryGetValue(itemName, out price))
             {
-                Bread bOrder;
-                if (breadOrdered.TryGetValue(itemName, out bOrder))
-                {
-                    bOrder.Quantity += quantity;
-                }
-                else
-                {
-                    Bread newBItem = new Bread(itemName, price, quantity);
-                    breadOrdered.Add(itemName, newBItem);
-                }
-                ShowOrder(false);
-                PurchaseSequence();
+                BakeryItem bread = new BakeryItem(itemName, price, quantity);
             }
             else
             {
-                WriteLine($"Sorry, could not find {itemName} on the menu.");
-                PurchaseSequence();
+                WriteLine($"Sorry, can't find {itemName} on the menu.");
+                DrawLine();
+                StartStore();
             }
+
         }
 
-        public void ShowOrder(bool fishished)
+        public void ShowOrder()
         {
-
-            WriteLine("------- Your order --------");
+            WriteLine($"------- You have {BakeryItem.orderList.Count} items in your order --------");
+            foreach(BakeryItem i in BakeryItem.orderList)
+            {
+                WriteLine($"Item Name: {i.ItemName} ... Quantity: {i.Quantity}   .... ${i.Price}");
+            }
             DrawLine();
-            _total = 0;
-            foreach (KeyValuePair<string, Pastry> p in pastryOrdered)
-            {
-                _total += p.Value.Quantity * p.Value.Price;
-                WriteLine($"Item: {p.Key} ..... Quatity: {p.Value.Quantity}");
-
-            }
-            foreach (KeyValuePair<string, Bread> b in breadOrdered)
-            {
-                _total += b.Value.Quantity * b.Value.Price;
-                WriteLine($"Item: {b.Key} ..... Quatity: {b.Value.Quantity}");
-
-            }
-
-            DrawLine();
-            if (!fishished)
-            {
-                DrawLine();
-                PurchaseSequence();
-            }
-            else
-            {
-                int theTotal = calculateTotal();
-                WriteLine($"Total = ${theTotal}");
-            }
         }
         public void ShowMenu()
         {
@@ -164,30 +99,7 @@ namespace Bakery
         }
         public int calculateTotal()
         {
-            int pastryCount = 0;
-            int breadCount = 0;
-            int discount = 0;
-            int bDiscount = 0;
-            foreach (KeyValuePair<string, Pastry> pastry in pastryOrdered)
-            {
-                pastryCount += pastry.Value.Quantity;
-            }
-            foreach( KeyValuePair<string, Bread> bread in breadOrdered)
-            {
-                breadCount += bread.Value.Quantity;
-            }
-            if(pastryCount >= 3)
-            {
-                discount = pastryCount/3; 
-                 
-            }
-            if(breadCount >= 3)
-            {
-                bDiscount = breadCount/3;
-            }
-            _total = (discount * 2) + (bDiscount * 5);
-
-            return _total;
+            return 0;
 
         }
 
